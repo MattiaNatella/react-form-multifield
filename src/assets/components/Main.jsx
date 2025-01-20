@@ -1,4 +1,4 @@
-import FormBlog from "./partials/FormBlog"
+import FormBlog from "./FormBlog"
 import { useState, useEffect } from "react"
 
 const Main = () => {
@@ -9,6 +9,7 @@ const Main = () => {
     return (
         <main>
             {show == "formblog" && <FormBlog />}
+
         </main>
     )
 }
