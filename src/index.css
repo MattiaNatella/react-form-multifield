@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  border: 2px solid black;
+  max-width: 1200px;
+  min-height: 100px;
+  background-image: linear-gradient(to right, #cb356b, #bd3f32);
+
+}
+
+button {
+  background-color: white;
+  color: white;
+  font-weight: bold;
+}
