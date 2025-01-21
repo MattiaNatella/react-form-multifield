@@ -27,38 +27,56 @@ const FormBlog = () => {
         image: '',
         content: '',
         category: '',
-        tags: [''],
+        tags: [],
         authorize: false
     }
 
-    const [FormData, setFormData] = useState(defaultFormData)
+    const [formData, setFormData] = useState(defaultFormData)
 
 
 
     const handlerSubmit = (e) => {
         e.preventDefault();
-        console.log(FormData)
+        console.log(formData)
     }
 
     const handlerChange = (e) => {
         let { name, value, type } = e.target;
-        console.log(e.target.type)
+
         if (type == 'checkbox') { value = e.target.checked }
         if (type == 'select-one') { value = categories[e.target.value] }
 
         setFormData({
-            ...FormData,
+            ...formData,
             [name]: value
         })
     }
 
+    const handlerChangeTags = (e) => {
+        console.log(e.target.value)
+        let { tags, ...others } = formData
+        //se è già presente lo escludo dalla lista filtrando per se stesso
+        if (tags.includes(e.target.value)) {
+            tags = tags.filter(tag = tag !== e.target.value)
+        } else {
+            tags = [...tags, e.target.value]
+        }
+
+        console.log(tags)
+        setFormData({
+            tags,
+            ...others
+        })
+
+    }
+
     useEffect(() => {
 
-        if (FormData.authorize) {
+        if (formData.authorize) {
             alert('Attenzione: il post verrà pubblicato')
 
         }
-    }, [FormData.authorize])
+    }, [formData.authorize])
 
     // const deleteTitle = (index) => {
     //     const filteredTitles = titles.filter(title => title !== titles[index])
@@ -79,7 +97,7 @@ const FormBlog = () => {
                                     type="text"
                                     className="form-control"
                                     placeholder="Titolo Blog"
-                                    value={FormData.title}
+                                    value={formData.title}
                                     onChange={handlerChange}
                                 />
                             </div>
@@ -91,7 +109,7 @@ const FormBlog = () => {
                                     type="file"
                                     className="form-control"
                                     name="image"
-                                    value={FormData.image}
+                                    value={formData.image}
                                     onChange={handlerChange}
                                 />
                             </div>
@@ -99,11 +117,11 @@ const FormBlog = () => {
                             <h2>Content</h2>
                             <div className="input-group">
                                 <span className="input-group-text">Inserisci contenuto</span>
-                                <textarea className="form-control" name="content" value={FormData.content} onChange={handlerChange} />
+                                <textarea className="form-control" name="content" value={formData.content} onChange={handlerChange} />
                             </div>
                             {/* CATEGORIA (SELECT) */}
                             <h2>Categoria</h2>
-                            <select className="form-select" name="category" defaultValue="c" onChange={handlerChange}>
+                            <select className="form-select" name="category" defaultValue="" onChange={handlerChange}>
                                 <option selected>Categoria</option>
                                 {categories.map((category, index) => (
                                     <option key={`key-${index}`} value={index}>{category}</option>
@@ -114,31 +132,15 @@ const FormBlog = () => {
                             {/* TAGS (LISTA CHECKBOX) */}
                             <h2>TAGS</h2>
                             <ul className="list-group">
-                                <li className="list-group-item">
-                                    <input className="form-check-input me-1"
-                                        type="checkbox"
-                                        value="Fun"
-                                        name="tags"
-                                        onChange={handlerChange} />
-                                    <label className="form-check-label" >#Fun</label>
-                                </li>
-                                <li className="list-group-item">
-                                    <input className="form-check-input me-1"
-                                        type="checkbox"
-                                        value="Friends"
-                                        name="tags"
-                                        onChange={handlerChange} />
-                                    <label className="form-check-label" >#Friends</label>
-                                </li>
-                                <li className="list-group-item">
-                                    <input
-                                        className="form-check-input me-1"
-                                        type="checkbox"
-                                        value="Travel"
-                                        name="tags"
-                                        onChange={handlerChange} />
-                                    <label className="form-check-label">#Travel</label>
-                                </li>
+                                {arrayTags.map(tag => (
+                                    <li key={tag.id} className="list-group-item">
+                                        <input className="form-check-input me-1"
+                                            type="checkbox"
+                                            value={tag.name}
+                                            onChange={handlerChangeTags} />
+                                        <label className="form-check-label" >{tag.name}</label>
+                                    </li>
+                                ))}
                             </ul>
                             {/* STATO PUBBLICAZIONE */}
                             <div className="form-check form-switch">
@@ -147,7 +149,7 @@ const FormBlog = () => {
                                     type="checkbox"
                                     role="switch"
                                     name="authorize"
-                                    value={FormData.authorize}
+                                    value={formData.authorize}
                                     onChange={handlerChange}
                                 />
                                 <label className="form-check-label" >Pubblica</label>
