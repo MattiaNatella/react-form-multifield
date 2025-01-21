@@ -3,3 +3,9 @@
   background-image: linear-gradient(to right, #cb356b, #bd3f32);
 
 }
+
+h1,
+h2,
+h3 {
+  text-align: center;
+}
