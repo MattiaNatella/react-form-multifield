@@ -32,12 +32,18 @@ const FormBlog = () => {
     }
 
     const [formData, setFormData] = useState(defaultFormData)
+    const [posts, setPosts] = useState([])
 
 
 
     const handlerSubmit = (e) => {
+
         e.preventDefault();
-        console.log(formData)
+
+        setPosts([
+            formData,
+            ...posts
+        ])
     }
 
     const handlerChange = (e) => {
@@ -53,16 +59,17 @@ const FormBlog = () => {
     }
 
     const handlerChangeTags = (e) => {
-        console.log(e.target.value)
+
+        //destrutturo separando la proprietà tags dall'oggetto formData, lasciando formData privo di quest'ultimo
         let { tags, ...others } = formData
+
         //se è già presente lo escludo dalla lista filtrando per se stesso
         if (tags.includes(e.target.value)) {
-            tags = tags.filter(tag = tag !== e.target.value)
+            tags = tags.filter(tag => tag !== e.target.value)
         } else {
             tags = [...tags, e.target.value]
         }
 
-        console.log(tags)
         setFormData({
             tags,
             ...others
@@ -74,8 +81,8 @@ const FormBlog = () => {
 
         if (formData.authorize) {
             alert('Attenzione: il post verrà pubblicato')
-
         }
+        console.log(posts)
     }, [formData.authorize])
 
     // const deleteTitle = (index) => {
@@ -85,11 +92,11 @@ const FormBlog = () => {
 
     return (
         <>
-            <div className="container my-5 p-2">
-                <div className="row">
+            <div className="container text-center  my-5 p-2">
+                <div className="row justify-content-center">
                     <div className="col-6">
                         <form action="#" onSubmit={handlerSubmit}>
-                            <h1>FORM</h1>
+                            <h1>Nuovo post INSTAGRAM</h1>
                             <div className="input-group mb-3">
                                 {/*TITOLO BLOG */}
                                 <input
@@ -106,7 +113,8 @@ const FormBlog = () => {
                             <h2>Immagine</h2>
                             <div className="input-group">
                                 <input
-                                    type="file"
+                                    type="text"
+                                    placeholder="URL immagine"
                                     className="form-control"
                                     name="image"
                                     value={formData.image}
@@ -116,13 +124,12 @@ const FormBlog = () => {
                             {/* CONTENUTO */}
                             <h2>Content</h2>
                             <div className="input-group">
-                                <span className="input-group-text">Inserisci contenuto</span>
-                                <textarea className="form-control" name="content" value={formData.content} onChange={handlerChange} />
+                                <textarea className="form-control" placeholder="Inserisci il contenuto del post" name="content" value={formData.content} onChange={handlerChange} />
                             </div>
                             {/* CATEGORIA (SELECT) */}
                             <h2>Categoria</h2>
                             <select className="form-select" name="category" defaultValue="" onChange={handlerChange}>
-                                <option selected>Categoria</option>
+                                <option selected>Scegli la categoria</option>
                                 {categories.map((category, index) => (
                                     <option key={`key-${index}`} value={index}>{category}</option>
                                 ))}
@@ -159,6 +166,31 @@ const FormBlog = () => {
                         </form>
                     </div>
                     {/* CARD DEL POST */}
+                    <div className="col-12">
+                        {posts.length > 0 ? (
+                            <>
+                                {
+                                    posts.map(post => (
+                                        <div className="card">
+                                            <img src={post.image} className="card-img-top" alt="Immagine post" />
+                                            <div className="card-body">
+                                                <h5 className="card-title">{post.title}</h5>
+                                                <p className="card-text">{post.content}</p>
+                                                <a href="#" className="btn btn-primary disabled">{post.authorize ? 'Pubblicato' : 'Bozza'}</a>
+                                            </div>
+                                        </div>
+                                    ))
+                                }
+
+                            </>
+                        )
+
+                            :
+                            <h3>Nessun post</h3>
+                        }
+                    </div>
+
+
 
                 </div>
             </div >
